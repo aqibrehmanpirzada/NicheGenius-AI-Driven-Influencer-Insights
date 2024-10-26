@@ -1,5 +1,3 @@
-Here's a `README.md` template for your Streamlit app titled "💡Realtime Influencer Recommendation Engine For Niche Marketing💡". This template includes sections for a description, installation, usage, features, and more. Feel free to modify it as needed.
-
 # 💡 Realtime Influencer Recommendation Engine For Niche Marketing 💡
 
 A Streamlit-based web application that helps businesses and marketers identify the most suitable influencers for their niche market in real-time. This app leverages advanced recommendation algorithms and data analysis techniques to provide insights that help make data-driven decisions for influencer marketing.
