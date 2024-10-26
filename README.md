@@ -17,8 +17,8 @@ To run this app locally, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/realtime-influencer-recommendation-engine.git
-   cd realtime-influencer-recommendation-engine
+   git clone https://github.com/aqibrehmanpirzada/Realtime-Influencer-Recommendation-System-Using-GPT-4o.git
+   cd Realtime-Influencer-Recommendation-System-Using-GPT-4o
    ```
 
 2. Create a virtual environment:
@@ -64,7 +64,6 @@ To run this app locally, follow these steps:
 The recommendation engine is powered by advanced LLM GPT-4o that analyze various metrics such as:
 
 - **Engagement Rate**
-- **Audience Demographics**
 - **Content Niche Alignment**
 - **Influencer Authenticity**
   
