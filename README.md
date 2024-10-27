@@ -17,8 +17,8 @@ To run this app locally, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/aqibrehmanpirzada/Realtime-Influencer-Recommendation-System-Using-GPT-4o.git
-   cd Realtime-Influencer-Recommendation-System-Using-GPT-4o
+   git clone https://github.com/aqibrehmanpirzada/NicheGenius-AI-Driven-Influencer-Insights.git
+   cd NicheGenius-AI-Driven-Influencer-Insights
    ```
 
 2. Create a virtual environment:
