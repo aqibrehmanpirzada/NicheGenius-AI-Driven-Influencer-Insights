@@ -1,4 +1,4 @@
-# 💡 Realtime Influencer Recommendation Engine For Niche Marketing 💡
+# 💡 NicheGenius: AI-Driven Influencer Insights 💡
 
 A Streamlit-based web application that helps businesses and marketers identify the most suitable influencers for their niche market in real-time. This app leverages advanced recommendation algorithms and data analysis techniques to provide insights that help make data-driven decisions for influencer marketing.
 
