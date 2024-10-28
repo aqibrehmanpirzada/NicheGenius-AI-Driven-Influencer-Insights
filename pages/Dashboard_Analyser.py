@@ -1,98 +1,131 @@
 import streamlit as st
-from openai import OpenAI
-import base64
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_openai import ChatOpenAI
+from langchain.prompts import PromptTemplate
+from langchain.chains import LLMChain
+import pandas as pd
+import tempfile
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
-# Initialize OpenAI client with your API key
-client = OpenAI(api_key= "Enter api Key Here")
-MODEL = "gpt-4o"
+# Function to read and combine text from all pages in a PDF
+def read_pdf(uploaded_file):
+    # Save the uploaded PDF to a temporary file
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        temp_file.write(uploaded_file.read())
+        temp_file_path = temp_file.name
 
-# Function to encode image to base64
-def encode_image(image_path):
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode("utf-8")
+    # Initialize PyPDFLoader with the temporary file path
+    loader = PyPDFLoader(temp_file_path)
 
-# Custom CSS for styling
-st.markdown("""
-    <style>
-        .main {
-            background-color: #2e2e2e;
+    # Load PDF and combine text from all pages
+    docs = loader.load()
+    combined_text = ""
+    for doc in docs:
+        combined_text += doc.page_content + "\n"
+
+    # Delete the temporary file
+    temp_file.close()
+    return combined_text
+
+# Streamlit app title and instructions
+st.markdown(
+        """
+        <style>
+        /* Sidebar styles */
+        div[data-testid="stSidebar"] {
+            background-color: #007BFF;  /* Blue background color */
+            color: #ffffff;  /* White text color */
+        }
+        div[data-testid="stSidebar"] a {
+            color: #ffffff;  /* White links */
+        }
+        div[data-testid="stSidebar"] .stButton > button {
             color: #ffffff;
-            padding: 2rem;
-            border-radius: 10px;
+            background-color: #0056b3;  /* Darker blue for buttons */
         }
-        .stButton button {
-            background-color: #ff6f61;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            font-size: 16px;
-            margin: 10px 2px;
-            transition-duration: 0.4s;
-            cursor: pointer;
-        }
-        .stButton button:hover {
-            background-color: white;
-            color: black;
-            border: 2px solid #ff6f61;
-        }
+
+        /* Main title styling */
         .title {
-            color: #96C9F4;
+            font-size: 3em;
             text-align: center;
-            font-family: 'Helvetica', sans-serif;
-            font-weight: bold;
+            padding-bottom: 20px;
+            animation: glow 2s linear infinite alternate;
+            text-shadow: 0 0 10px #007BFF, 0 0 20px #007BFF, 0 0 30px #007BFF, 0 0 40px #0056b3, 0 0 70px #0056b3, 0 0 80px #0056b3, 0 0 100px #0056b3, 0 0 150px #0056b3;
         }
-        .subtitle {
-            text-align: center;
-            font-family: 'Helvetica', sans-serif;
-        }
-        .footer {
-            text-align: center;
-            font-family: 'Helvetica', sans-serif;
-            margin-top: 2rem;
-            font-size: 12px;
-        }
-    </style>
-""", unsafe_allow_html=True)
 
-# Streamlit app layout
-st.markdown("<h1 class='title'>Dashboard Analyzer</h1>", unsafe_allow_html=True)
-st.markdown("<h3 class='subtitle'>Upload an Dashboard image to analyze its content</h3>", unsafe_allow_html=True)
+        /* Animation for glowing effect */
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #007BFF, 0 0 20px #007BFF, 0 0 30px #007BFF, 0 0 40px #0056b3, 0 0 70px #0056b3, 0 0 80px #0056b3, 0 0 100px #0056b3, 0 0 150px #0056b3;
+            }
+            to {
+                text-shadow: 0 0 20px #007BFF, 0 0 30px #007BFF, 0 0 40px #0056b3, 0 0 70px #0056b3, 0 0 80px #0056b3, 0 0 100px #0056b3, 0 0 150px #0056b3, 0 0 200px #0056b3, 0 0 300px #0056b3;
+            }
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+st.markdown("<h1 class='title'> PDF Business Document Analyzer</h1>", unsafe_allow_html=True)
+st.write("Upload a Business Document to get recommended Influencers")
 
-uploaded_file = st.file_uploader("Choose an Dashboard image", type=["png", "jpg", "jpeg"])
+# File upload widget
+uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
 
 if uploaded_file is not None:
-    # Save the uploaded file temporarily
-    temp_file_path = os.path.join("temp_image", uploaded_file.name)
-    os.makedirs("temp_image", exist_ok=True)
-    with open(temp_file_path, "wb") as temp_file:
-        temp_file.write(uploaded_file.getbuffer())
+    # Process the uploaded PDF file
+    pdf_text = read_pdf(uploaded_file)
 
-    # Encode the image to base64
-    base64_image = encode_image(temp_file_path)
+    # Initialize OpenAI client
+    api_key = os.getenv("OPENAI_API_KEY")
+    openai_api_key = api_key
+    llm = ChatOpenAI(model="gpt-4o", openai_api_key=openai_api_key)
 
-    with st.spinner("Analyzing the image..."):
-        # Send the image to OpenAI API
-        response = client.chat.completions.create(
-            model=MODEL,
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant that responds in Markdown. Help me with my math homework!"},
-                {"role": "user", "content": [
-                    {"type": "text", "text": "Map the field with values in this image?"},
-                    {"type": "image_url", "image_url": {
-                        "url": f"data:image/png;base64,{base64_image}"}
-                    }
-                ]}
-            ],
-            temperature=0.0,
-        )
+    # Define template for OpenAI prompt
+    template = """
+    Analyse the document and provide 10 recommended ecommerce influencers related to the business in the document, and also provide information on which platforms we can approach them.
+    {doc_text}
+    """
+    prompt = PromptTemplate(template=template, input_variables=["doc_text"])
+    llmchain = LLMChain(llm=llm, prompt=prompt)
 
-    # Display the response
-    st.markdown("### Analysis Results")
-    st.markdown(response.choices[0].message.content, unsafe_allow_html=True)
+    # Invoke OpenAI model with PDF text
+    response = llmchain.invoke({"doc_text": pdf_text})
+    data = response["text"]
 
-    # Cleanup temporary files
-    os.remove(temp_file_path)
+    # Option 1: Display the output as plain text
+    st.subheader("The Recommended Influencers Related to Your Business Are:")
+    st.write(data)
 
-st.markdown("<div class='footer'>Developed by Aqib Rehman PirZada</div>", unsafe_allow_html=True)
+    # Option 2: Try to format the data into a table (if the data follows a structured format)
+    try:
+        influencers = data.split("\n")  # Split the text by line breaks
+
+        # Create a list to store influencer data
+        influencer_list = []
+
+        # Iterate over each influencer detail and extract information
+        for influencer in influencers:
+            # Example of expected format: "Influencer 1: Name - Platform - Contact Info"
+            details = influencer.split(" - ")
+            if len(details) == 3:
+                influencer_dict = {
+                    "name": details[0],
+                    "platform": details[1],
+                    "contact_info": details[2]
+                }
+                influencer_list.append(influencer_dict)
+
+        # Convert to a DataFrame for tabular display
+        # df = pd.DataFrame(influencer_list)
+
+        # # Display DataFrame
+        # st.subheader("Formatted Influencer Information:")
+        # st.write(df)
+
+    except Exception as e:
+        st.error(f"Failed to format data into a table: {e}")
+        st.write("Displaying the raw response instead:")
+        st.code(data)
