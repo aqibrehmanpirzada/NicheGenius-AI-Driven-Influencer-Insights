@@ -3,12 +3,14 @@
 A Streamlit-based web application that helps businesses and marketers identify the most suitable influencers for their niche market in real-time. This app leverages advanced recommendation algorithms and data analysis techniques to provide insights that help make data-driven decisions for influencer marketing.
 
 ## 🚀 Features
+1. **Prompt-Based Influencer Matching**:  
+   Users can enter prompts like _"I need influencers for my sportswear brand"_, and the system intelligently generates a list of influencers who align with the brand’s target audience and goals.
 
-- **Real-time Recommendations**: Provides real-time influencer recommendations based on niche-specific criteria.
-- **User-Friendly Interface**: Built with Streamlit for an easy-to-use and interactive user experience.
-- **Customizable Filters**: Filter influencers by niche, engagement rate, follower count, and more.
-- **Visual Analytics**: Get insights through interactive charts and graphs to visualize influencer data.
-- **Data Upload**: Upload your own influencer data to get customized recommendations.
+2. **Document Business Analysis and Suggestions**:  
+   Leveraging data analytics, the system analyzes brand objectives, market trends, and audience demographics to recommend the best influencers, ensuring alignment and maximizing ROI.
+
+3. **Interactive Dashboards Summarization**:  
+   Users receive AI-generated summaries of dashboards, highlighting key metrics from e-commerce and influencer activities. This feature simplifies complex data into clear, actionable insights.
 
 ## 📦 Installation
 
