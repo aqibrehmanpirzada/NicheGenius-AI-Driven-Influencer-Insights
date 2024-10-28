@@ -71,7 +71,17 @@ This ensures that the recommendations are not only relevant but also data-driven
 
 ## 🎨 Screenshot
 
-![App Screenshot](path/to/screenshot.png)
+![App Screenshot](Results/1.png)
+![App Screenshot](Results/2.png)
+![App Screenshot](Results/3.png)
+![App Screenshot](Results/6.png)
+![App Screenshot](Results/7.png)
+![App Screenshot](Results/8.png)
+![App Screenshot](Results/9.png)
+![App Screenshot](Results/10.png)
+![App Screenshot](Results/11.png)
+![App Screenshot](Results/12.png)
+![App Screenshot](Results/13.png)
 
 ## 📝 Requirements
 
